@@ -1,0 +1,16 @@
+[package]
+name = "image-viewer-rs"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+image = "0.25.9"
+imgui = { git = "https://github.com/imgui-rs/imgui-rs.git", version = "0.12.0" }
+jxl-oxide = { version = "0.12.5", features = ["rayon", "image"]}
+sdl2 = { version = "0.38", features = ["image", "hidapi"] }
+imgui-glow-renderer = { git = "https://github.com/imgui-rs/imgui-glow-renderer.git", version = "0.13.0" }
+imgui-sdl2-support = { git = "https://github.com/franktankbank/imgui-sdl2-support.git", version = "0.13.0" }
+rfd = "0.17.2"
+magic-db = { version = "0.4.2", features = ["global"] }
+pure-magic = "0.2.2"  # Required peer dependency
+image-extras = "0.1.0"
