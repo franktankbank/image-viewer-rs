@@ -7,6 +7,7 @@ pub mod error {
     use sdl2::video::WindowBuildError;
     use imgui_glow_renderer::InitError;
     use pure_magic::Error as PureMagicError;
+    use qoi::Error as QoiError;
 
     #[derive(Debug)]
     pub struct UnsupportedImageError;
@@ -98,7 +99,8 @@ pub mod error {
         ImageIdentity(ImageIdentityError),
         XpmDecode(XpmDecodeError),
         OpenImage(OpenImageError),
-        Nul(NulError)
+        Nul(NulError),
+        Qoi(QoiError)
     }
 
     impl fmt::Display for ImageViewerError {
@@ -113,7 +115,8 @@ pub mod error {
                 ImageViewerError::ImageIdentity(e) => write!(f, "Image Identity Error: {}", e),
                 ImageViewerError::XpmDecode(e) => write!(f, "Xpm Decode Error: {}", e),
                 ImageViewerError::OpenImage(e) => write!(f, "Open Image Error: {}", e),
-                ImageViewerError::Nul(e) => write!(f, "NUL Error: {}", e)
+                ImageViewerError::Nul(e) => write!(f, "NUL Error: {}", e),
+                ImageViewerError::Qoi(e) => write!(f, "Qoi Error: {}", e)
             }
         }
     }
@@ -130,7 +133,8 @@ pub mod error {
                 ImageViewerError::ImageIdentity(e) => Some(e),
                 ImageViewerError::XpmDecode(e) => Some(e),
                 ImageViewerError::OpenImage(e) => Some(e),
-                ImageViewerError::Nul(e) => Some(e)
+                ImageViewerError::Nul(e) => Some(e),
+                ImageViewerError::Qoi(e) => Some(e)
             }
         }
     }
@@ -192,6 +196,12 @@ pub mod error {
     impl From<NulError> for ImageViewerError {
         fn from(err: NulError) -> Self {
             ImageViewerError::Nul(err)
+        }
+    }
+
+    impl From<QoiError> for ImageViewerError {
+        fn from(err: QoiError) -> Self {
+            ImageViewerError::Qoi(err)
         }
     }
 }

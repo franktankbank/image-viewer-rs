@@ -14,3 +14,4 @@ rfd = "0.17.2"
 magic-db = { version = "0.4.2", features = ["global"] }
 pure-magic = "0.2.2"  # Required peer dependency
 image-extras = "0.1.0"
+qoi = "0.4.1"
