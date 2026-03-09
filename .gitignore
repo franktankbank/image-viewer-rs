@@ -62,3 +62,10 @@ rust-project.json
 
 # X Pixmap
 *.xpm
+
+# JPEG
+*.jpg
+*.jpeg
+
+# Quite OK
+*.qoi
