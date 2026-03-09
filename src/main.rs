@@ -71,7 +71,7 @@ fn identify_image(image_path: &str) -> Result<ImageFormat, error::ImageIdentityE
         "image/jxl" => Ok(ImageFormat::Jxl),
         "image/x-xpixmap" => Ok(ImageFormat::Xpm),
         "image/x-qoi" => Ok(ImageFormat::Qoi),
-        _ => Err(error::ImageIdentityError::UnsupportedImage(error::UnsupportedImageError))
+        _ => Err(error::ImageIdentityError::UnsupportedImage(error::UnsupportedImageError{ mime_type: magic.mime_type().to_string()}))
     }
 }
 
