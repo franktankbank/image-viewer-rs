@@ -3,7 +3,6 @@ pub mod img {
     mod jxl_mod;
     #[path = "xpm.rs"]
     mod xpm_mod;
-
     #[path = "qoi.rs"]
     mod qoi_mod;
 

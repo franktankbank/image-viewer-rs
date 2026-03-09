@@ -10,11 +10,13 @@ pub mod error {
     use qoi::Error as QoiError;
 
     #[derive(Debug)]
-    pub struct UnsupportedImageError;
+    pub struct UnsupportedImageError {
+        pub mime_type: String
+    }
 
     impl fmt::Display for UnsupportedImageError {
         fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-            write!(f, "this image format is unsupported")
+            write!(f, "this image format is unsupported\nMime Type: {}", self.mime_type)
         }
     }
 
