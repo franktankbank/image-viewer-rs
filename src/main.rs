@@ -9,7 +9,7 @@ use imgui_glow_renderer::{
 use rfd::FileDialog;
 use std::fs::File;
 
-use root::{error, img::{ImageData, jxl, xpm}};
+use root::{error, img::{ImageData, jxl, xpm, qoi}};
 
 struct ImageDims {
     draw_w: f32,
@@ -30,7 +30,8 @@ struct Texture {
 
 enum ImageFormat {
     Jxl,
-    Xpm
+    Xpm,
+    Qoi
 }
 
 impl RenderConfig {
@@ -69,6 +70,7 @@ fn identify_image(image_path: &str) -> Result<ImageFormat, error::ImageIdentityE
     match magic.mime_type() {
         "image/jxl" => Ok(ImageFormat::Jxl),
         "image/x-xpixmap" => Ok(ImageFormat::Xpm),
+        "image/x-qoi" => Ok(ImageFormat::Qoi),
         _ => Err(error::ImageIdentityError::UnsupportedImage(error::UnsupportedImageError))
     }
 }
@@ -84,6 +86,10 @@ fn render_image(image_path: &str, gl: &glow::Context, window: &mut Window) -> Re
         ImageFormat::Xpm => {
             window.set_title("Image Viewer (X Pixmap)")?;
             xpm::decode_xpm(image_path)?
+        },
+        ImageFormat::Qoi => {
+            window.set_title("Image Viewer (Quite OK)")?;
+            qoi::decode_qoi(image_path)?
         }
     };
 
@@ -136,6 +142,7 @@ fn open_image(renderer: &mut AutoRenderer, render_config: &mut Option<RenderConf
     if let Some(path) = FileDialog::new()
     .add_filter("JPEG XL", &["jxl"])
     .add_filter("X Pixmap", &["xpm"])
+    .add_filter("Quite OK", &["qoi"])
     .set_title("Image Viewer").pick_file() {
         if let Some(old) = &render_config {
             unsafe {
