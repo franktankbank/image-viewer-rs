@@ -11,6 +11,8 @@ use std::fs::File;
 
 use root::{error, img::{ImageData, jxl, xpm, qoi, psd}};
 
+use crate::root::img::ico;
+
 struct ImageDims {
     draw_w: f32,
     draw_h: f32,
@@ -32,7 +34,8 @@ enum ImageFormat {
     Jxl,
     Xpm,
     Qoi,
-    Psd
+    Psd,
+    Ico
 }
 
 impl RenderConfig {
@@ -78,6 +81,7 @@ fn identify_image(image_path: &str) -> Result<ImageFormat, error::ImageIdentityE
         "application/psd" => Ok(ImageFormat::Psd),
         "image/psd" => Ok(ImageFormat::Psd),
         "image/x-photoshop" => Ok(ImageFormat::Psd),
+        "image/vnd.microsoft.icon" => Ok(ImageFormat::Ico),
         _ => Err(error::ImageIdentityError::UnsupportedImage(error::UnsupportedImageError{ mime_type: magic.mime_type().to_string()}))
     }
 }
@@ -101,6 +105,10 @@ fn render_image(image_path: &str, gl: &glow::Context, window: &mut Window) -> Re
         ImageFormat::Psd => {
             window.set_title("Image Viewer (Adobe Photoshop Document)")?;
             psd::decode_psd(image_path)?
+        },
+        ImageFormat::Ico => {
+            window.set_title("Image Viewer (MS Windows icon resource)")?;
+            ico::decode_ico(image_path)?
         }
     };
 
@@ -155,6 +163,7 @@ fn open_image(renderer: &mut AutoRenderer, render_config: &mut Option<RenderConf
     .add_filter("X Pixmap", &["xpm"])
     .add_filter("Quite OK", &["qoi"])
     .add_filter("Adobe Photoshop Document", &["psd"])
+    .add_filter("MS Windows icon resource", &["ico"])
     .set_title("Image Viewer").pick_file() {
         if let Some(old) = &render_config {
             unsafe {
