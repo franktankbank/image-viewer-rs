@@ -9,7 +9,7 @@ use imgui_glow_renderer::{
 use rfd::FileDialog;
 use std::fs::File;
 
-use root::{error, img::{ImageData, jxl, xpm, qoi}};
+use root::{error, img::{ImageData, jxl, xpm, qoi, psd}};
 
 struct ImageDims {
     draw_w: f32,
@@ -31,7 +31,8 @@ struct Texture {
 enum ImageFormat {
     Jxl,
     Xpm,
-    Qoi
+    Qoi,
+    Psd
 }
 
 impl RenderConfig {
@@ -71,6 +72,12 @@ fn identify_image(image_path: &str) -> Result<ImageFormat, error::ImageIdentityE
         "image/jxl" => Ok(ImageFormat::Jxl),
         "image/x-xpixmap" => Ok(ImageFormat::Xpm),
         "image/x-qoi" => Ok(ImageFormat::Qoi),
+        "image/vnd.adobe.photoshop" => Ok(ImageFormat::Psd),
+        "application/x-photoshop" => Ok(ImageFormat::Psd),
+        "application/photoshop" => Ok(ImageFormat::Psd),
+        "application/psd" => Ok(ImageFormat::Psd),
+        "image/psd" => Ok(ImageFormat::Psd),
+        "image/x-photoshop" => Ok(ImageFormat::Psd),
         _ => Err(error::ImageIdentityError::UnsupportedImage(error::UnsupportedImageError{ mime_type: magic.mime_type().to_string()}))
     }
 }
@@ -90,6 +97,10 @@ fn render_image(image_path: &str, gl: &glow::Context, window: &mut Window) -> Re
         ImageFormat::Qoi => {
             window.set_title("Image Viewer (Quite OK)")?;
             qoi::decode_qoi(image_path)?
+        },
+        ImageFormat::Psd => {
+            window.set_title("Image Viewer (Adobe Photoshop Document)")?;
+            psd::decode_psd(image_path)?
         }
     };
 
@@ -143,6 +154,7 @@ fn open_image(renderer: &mut AutoRenderer, render_config: &mut Option<RenderConf
     .add_filter("JPEG XL", &["jxl"])
     .add_filter("X Pixmap", &["xpm"])
     .add_filter("Quite OK", &["qoi"])
+    .add_filter("Adobe Photoshop Document", &["psd"])
     .set_title("Image Viewer").pick_file() {
         if let Some(old) = &render_config {
             unsafe {

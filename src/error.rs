@@ -8,6 +8,7 @@ pub mod error {
     use imgui_glow_renderer::InitError;
     use pure_magic::Error as PureMagicError;
     use qoi::Error as QoiError;
+    use psd::PsdError;
 
     #[derive(Debug)]
     pub struct UnsupportedImageError {
@@ -102,7 +103,8 @@ pub mod error {
         XpmDecode(XpmDecodeError),
         OpenImage(OpenImageError),
         Nul(NulError),
-        Qoi(QoiError)
+        Qoi(QoiError),
+        Psd(PsdError)
     }
 
     impl fmt::Display for ImageViewerError {
@@ -118,7 +120,8 @@ pub mod error {
                 ImageViewerError::XpmDecode(e) => write!(f, "Xpm Decode Error: {}", e),
                 ImageViewerError::OpenImage(e) => write!(f, "Open Image Error: {}", e),
                 ImageViewerError::Nul(e) => write!(f, "NUL Error: {}", e),
-                ImageViewerError::Qoi(e) => write!(f, "Qoi Error: {}", e)
+                ImageViewerError::Qoi(e) => write!(f, "Qoi Error: {}", e),
+                ImageViewerError::Psd(e) => write!(f, "Psd Error: {}", e)
             }
         }
     }
@@ -136,7 +139,8 @@ pub mod error {
                 ImageViewerError::XpmDecode(e) => Some(e),
                 ImageViewerError::OpenImage(e) => Some(e),
                 ImageViewerError::Nul(e) => Some(e),
-                ImageViewerError::Qoi(e) => Some(e)
+                ImageViewerError::Qoi(e) => Some(e),
+                ImageViewerError::Psd(e) => Some(e)
             }
         }
     }
@@ -204,6 +208,12 @@ pub mod error {
     impl From<QoiError> for ImageViewerError {
         fn from(err: QoiError) -> Self {
             ImageViewerError::Qoi(err)
+        }
+    }
+
+    impl From<PsdError> for ImageViewerError {
+        fn from(err: PsdError) -> Self {
+            ImageViewerError::Psd(err)
         }
     }
 }
