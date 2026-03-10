@@ -9,6 +9,8 @@ pub mod img {
     mod psd_mod;
     #[path = "ico.rs"]
     mod ico_mod;
+    #[path = "bmp.rs"]
+    mod bmp_mod;
 
     use image::DynamicImage;
 
@@ -17,6 +19,7 @@ pub mod img {
     pub use qoi_mod::qoi;
     pub use psd_mod::psd;
     pub use ico_mod::ico;
+    pub use bmp_mod::bmp;
 
     pub struct ImageData {
         pub width: u32,
